@@ -1,5 +1,12 @@
 import fetchImages from './Api/Api';
 import { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify'; ///npm i react-toastify
+import 'react-toastify/dist/ReactToastify.css';
+import { Searchbar } from './Searchbar/Searchbar';
+import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Button } from './Button/Button';
+import { Loader } from './Loader/Loader';
+import Modal from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -12,7 +19,7 @@ export class App extends Component {
     error: null,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_, prevState) {
     const prevPage = prevState.page;
     const prevSearchData = prevState.searchData;
     const { searchData, page, images } = this.state;
@@ -22,7 +29,7 @@ export class App extends Component {
         const response = fetchImages(searchData, page);
         response.then(data => {
           data.data.hits.length === 0
-            ? toast.error('Nothing found')
+            ? toast.error('Nothing is found ʕ•́ᴥ•̀ʔ')
             : data.data.hits.forEach(({ id, webformatURL, largeImageURL }) => {
                 !images.some(image => image.id === id) &&
                   this.setState(({ images }) => ({
@@ -40,7 +47,7 @@ export class App extends Component {
 
   onSubmit = searchData => {
     if (searchData.trim() === '') {
-      return toast.error('Enter the meaning for search');
+      return toast.error('Enter the meaning for search ✍(◔◡◔)');
     } else if (searchData === this.state.searchData) {
       return;
     }
@@ -71,7 +78,7 @@ export class App extends Component {
     const { images, isLoading, largeImage, showModal } = this.state;
 
     return (
-      <div className={s.App}>
+      <>
         <Searchbar onSubmit={onSubmit} />
         {images.length !== 0 && (
           <ImageGallery images={images} openModal={openModal} />
@@ -82,7 +89,7 @@ export class App extends Component {
         {isLoading && <Loader />}
         <ToastContainer autoClose={2500} />
         {images.length >= 12 && <Button nextPage={nextPage} />}
-      </div>
+      </>
     );
   }
 }

@@ -1,36 +1,20 @@
-export default class LoadMoreBtn {
-  constructor({ selector, hidden = false }) {
-    this.refs = this.getRefs(selector);
+import { ThreeDots } from 'react-loader-spinner'; ///npm i react-loader-spinner
+import { Wrapper } from './Loader.styled';
 
-    hidden && this.hide();
-  }
-
-  getRefs(selector) {
-    const refs = {};
-    refs.button = document.querySelector(selector);
-    refs.label = refs.button.querySelector('.label');
-    refs.spinner = refs.button.querySelector('.spinner');
-
-    return refs;
-  }
-
-  enable() {
-    this.refs.button.disabled = false;
-    this.refs.label.textContent = 'load more';
-    this.refs.spinner.classList.add('is-hidden');
-  }
-
-  disable() {
-    this.refs.button.disabled = true;
-    this.refs.label.textContent = 'loading';
-    this.refs.spinner.classList.remove('is-hidden');
-  }
-
-  Show() {
-    this.refs.button.classList.remove('is-hidden');
-  }
-
-  hide() {
-    this.refs.button.classList.add('is-hidden');
-  }
-}
+export const Loader = () => {
+  return (
+    <Wrapper>
+      <ThreeDots
+        height="80"
+        width="80"
+        radius="9"
+        color="#3f51b5"
+        // color="#4fa94d"
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName=""
+        visible={true}
+      />
+    </Wrapper>
+  );
+};

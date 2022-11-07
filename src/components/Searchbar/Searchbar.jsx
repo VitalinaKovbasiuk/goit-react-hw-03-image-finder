@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-// import { FiSearch } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi'; ///npm i react-icons
 import PropTypes from 'prop-types';
+import {
+  SearchbarHeader,
+  SearchForm,
+  SearchFormBbutton,
+  SearchFormButtonLabel,
+  SearchFormInput,
+} from './Searchbar.styled';
 
 export class Searchbar extends Component {
   state = {
@@ -13,36 +20,42 @@ export class Searchbar extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+
     if (this.state.searchQuery.trim() === '') {
-      return alert('Please enter something :)');
+      return alert('Please select something');
     }
     this.props.onSubmit(this.state.searchQuery);
+    this.setState({ searchQuery: '' });
+    this.reset();
+  };
+
+  reset = () => {
     this.setState({ searchQuery: '' });
   };
 
   render() {
     return (
-      <header className={css.Searchbar}>
-        <form onSubmit={this.handleSubmit} className={css.SearchForm}>
-          <button type="submit" className={css.SearchFormButton}>
-            {/* <span>
+      <SearchbarHeader>
+        <SearchForm onSubmit={this.handleSubmit}>
+          <SearchFormBbutton type="submit">
+            <span>
               <FiSearch size={30} stroke="#9035bd" />
-            </span> */}
-            <span class="button-label">Search</span>
-          </button>
-
-          <input
-            className={css.SearchFormInput}
-            name="searchQuery"
-            type="text"
-            autocomplete="off"
-            autofocus
-            placeholder="Search images and photos"
-            value={this.state.searchQuery}
-            onChange={this.handleChange}
-          />
-        </form>
-      </header>
+            </span>
+            {/* <span className="button-label">Search</span> */}
+          </SearchFormBbutton>
+          <SearchFormButtonLabel>
+            <SearchFormInput
+              name="searchQuery"
+              type="text"
+              autocomplete="off"
+              autoFocus
+              placeholder="Search images and photos"
+              value={this.state.searchQuery}
+              onChange={this.handleChange}
+            />
+          </SearchFormButtonLabel>
+        </SearchForm>
+      </SearchbarHeader>
     );
   }
 }
