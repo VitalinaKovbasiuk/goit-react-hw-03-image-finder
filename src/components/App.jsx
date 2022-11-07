@@ -47,7 +47,7 @@ export class App extends Component {
 
   onSubmit = searchData => {
     if (searchData === '') {
-      return toast.error('Enter a word for search ✍(◔◡◔)');
+      return toast.error('Enter a word for search');
     } else if (searchData === this.state.searchData) {
       return;
     }

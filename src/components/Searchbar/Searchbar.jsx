@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import { FiSearch } from 'react-icons/fi'; ///npm i react-icons
 import PropTypes from 'prop-types';
 import {
@@ -22,7 +23,7 @@ export class Searchbar extends Component {
     e.preventDefault();
 
     if (this.state.searchQuery.trim() === '') {
-      return alert('Please select something');
+      return toast.warning('Write something ✍(◔◡◔)');
     }
     this.props.onSubmit(this.state.searchQuery);
     this.setState({ searchQuery: '' });
