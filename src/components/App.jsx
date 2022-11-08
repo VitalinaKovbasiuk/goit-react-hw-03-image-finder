@@ -12,34 +12,44 @@ export class App extends Component {
   state = {
     searchData: '',
     images: [],
-    page: 0,
+    page: 1,
     largeImage: '',
     showModal: false,
     isLoading: false,
     error: null,
+    totalResalts: [],
+    showButton: false,
   };
 
   componentDidUpdate(_, prevState) {
     const prevPage = prevState.page;
     const prevSearchData = prevState.searchData;
-    const { searchData, page, images } = this.state;
+    // const totalImages = this.state.totalResalts;
+    const { searchData, page } = this.state;
+
     if (prevPage !== page || prevSearchData !== searchData) {
       try {
-        this.setState({ isLoading: true });
+        this.setState({ isLoading: true, showButton: false });
         const response = fetchImages(searchData, page);
+
         response.then(data => {
-          data.data.hits.length === 0
-            ? toast.error('Nothing is found ʕ•́ᴥ•̀ʔ')
-            : data.data.hits.forEach(({ id, webformatURL, largeImageURL }) => {
-                !images.some(image => image.id === id) &&
-                  this.setState(({ images }) => ({
-                    images: [...images, { id, webformatURL, largeImageURL }],
-                  }));
-              });
-          this.setState({ isLoading: false });
+          if (data.data.hits.length === 0) {
+            toast.error('Nothing is found ʕ•́ᴥ•̀ʔ');
+          }
+          this.setState(({ images }) => ({
+            images: [...images, ...data.data.hits],
+            // totalResalts: data.data.totalHits,
+          }));
+          this.setState({
+            isLoading: false,
+            showButton:
+              this.state.page < Math.ceil(data.data.totalHits / 12)
+                ? true
+                : false,
+          });
         });
       } catch (error) {
-        this.setState({ error, isLoading: false });
+        this.setState({ error, isLoading: false, showButton: false });
       } finally {
       }
     }
@@ -75,7 +85,7 @@ export class App extends Component {
 
   render() {
     const { toggleModal, openModal, nextPage, onSubmit } = this;
-    const { images, isLoading, largeImage, showModal } = this.state;
+    const { images, isLoading, largeImage, showModal, showButton } = this.state;
 
     return (
       <>
@@ -88,7 +98,7 @@ export class App extends Component {
         )}
         {isLoading && <Loader />}
         <ToastContainer autoClose={2500} />
-        {images.length >= 12 && <Button nextPage={nextPage} />}
+        {showButton && <Button nextPage={nextPage} />}
       </>
     );
   }
